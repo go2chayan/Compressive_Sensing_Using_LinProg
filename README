@@ -1,0 +1,30 @@
+README
+======
+
+I did it as a part of homework problem in the Advanced Machine Learning class taught by Prof Ji Liu in Fall 2014. 
+
+This MATLAB script shows the use of linear programming in compressive sensing.
+
+It is possible to use a linear programmer (an algorithm that solves linear optimization problem) to solve the following problem:
+
+\min_x |x|_1 \quad \text{s.t.} \quad Ax = b  (where columns of A > rows of A)
+
+The sparsity constraint over x often recovers the correct x even when the basis of transformation A is overcomplete (i.e. A has more columns than rows and therefore multiple values of x can solve Ax=b)
+
+The current code takes a sparse vector (x*) and applies a random linear transformation (i.e. multiply with a random matrix, A). It then reconstructs x* by doing the following:
+
+Suppose x1 and x2 has the same size as x and they contain the positive and negative elements of x respectively (but x1 >= 0 and x2 >= 0). The other elements (of x1 and x2) are just set to zero. Then, x = x1 - x2 and l-1 norm of x can be written as 1'(x1 + x2). Note that 1 is a vector of ones and its size is the same as to which it is being multiplied with (i.e. x). The prime sign (') represents transpose operation. Therefore, the optimization is same as:
+
+\min_{x1,x2} 1'(x1+x2)
+s.t. A(x1 - x2) = b
+and x1>=0 and x2 >= 0
+
+We can solve this problem using a linear programmer if we notice the following:
+Ax = A(x1 - x2) = [A, -A]z
+where [,] represents a horizontal concatanation operation and z = [x1',x2']'
+
+Once we get this relation, the optimization problem is transformed to the following:
+
+\arg\min_z 1'z subject to [A, -A]z = b and all_element_of(z) >= 0.
+
+This final problem is solved using a linear programmer in the MATLAB script.
